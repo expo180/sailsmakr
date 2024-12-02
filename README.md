@@ -52,7 +52,7 @@ To run Sailsmakr locally, ensure you have the following tools installed:
    git clone https://github.com/sailsmakr/sailsmakr.git
    cd sailsmakr
 
-2.Set Up the Backend:
+2.**Set Up the Backend**:
 
     Create a Python virtual environment and install dependencies
     ```bash 
@@ -60,25 +60,25 @@ To run Sailsmakr locally, ensure you have the following tools installed:
         source venv/bin/activate
         pip install -r requirements.txt
 
-3.Set Up the Frontend:
+3.**Set Up the Frontend**:
 
 Install npm dependencies:
     ```bash
-    npm install
+        npm install
 
 
-Run Docker Containers:
+4.**Run Docker Containers**:
 
 Ensure Docker is installed and running:
- 
-```bash
-docker-compose up --build
+    ```bash
+        docker-compose up --build
 
 Set Up Environment Variables:
 
 Create a .env file and add the necessary environment variables, such as API keys for OpenCage, FedEx, Freightos, and database credentials.
 Code Infrastructure
-Sailsmakr is designed using Infrastructure as Code (IaC) principles, which ensures that the infrastructure is automated, scalable, and consistent across environments. The deployment and provisioning of resources like databases, cloud instances, and storage are managed programmatically using tools like Terraform.
+
+***Sailsmakr is designed using Infrastructure as Code (IaC) principles, which ensures that the infrastructure is automated, scalable, and consistent across environments. The deployment and provisioning of resources like databases, cloud instances, and storage are managed programmatically using tools like Terraform.**
 
 Python (Flask) serves as the core backend framework for handling API requests and business logic.
 The backend interacts with Neon DB (PostgreSQL) for managing relational data and Firestore for file storage.
@@ -86,46 +86,43 @@ Database Management
 Neon DB (PostgreSQL)
 Sailsmakr uses Neon DB for managing structured data in a relational format. PostgreSQL handles large-scale transactional queries and ensures data integrity.
 
-Features: ACID-compliant, high performance, and secure.
-Usage: Customer information, transaction records, and core business logic.
-Firestore (NoSQL)
-For handling unstructured data such as files, media uploads, and logs, Sailsmakr integrates Firestore, a cloud-based NoSQL solution.
+## Features  
 
-Benefits: Scalability, flexibility, and real-time updates.
-Usage: File storage, media management, and document-oriented data.
-Cloud and Containerization
-Sailsmakr runs on Render Cloud, a powerful and flexible cloud platform that allows seamless scaling and hosting of the application. Additionally, Docker is used for containerization, ensuring that the software runs consistently across different environments.
+| Feature                  | Description                                                                                       | Benefits                               | Usage                                            |
+|--------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------|--------------------------------------------------|
+| **ACID-compliant Database** | Ensures data reliability, integrity, and consistency with high performance and security.         | Reliable, secure, high-performance    | Customer information, transaction records, core business logic |
+| **Firestore (NoSQL)**     | A cloud-based solution for handling unstructured data like files, media uploads, and logs.        | Scalability, flexibility, real-time updates | File storage, media management, document-oriented data |
+| **Cloud Hosting**         | Sailsmakr runs on Render Cloud for scalable and seamless application hosting.                     | Seamless scaling, high availability   | Application hosting and scaling                  |
+| **Containerization with Docker** | Ensures consistent application performance across environments through containerization.        | Consistency, easier deployment, scaling | Backend, frontend, and database containerization |
 
-Docker: Used to containerize the application for easier deployment and scaling. The backend, frontend, and databases are all containerized for smooth and reliable operation.
-Docker Commands:
-Start Containers:
-bash
- 
-```bash
-docker-compose up --build
+## Docker Commands  
 
-Stop Containers:
- 
-```bash
-docker-compose down
+- **Start Containers:**  
+  ```bash
+        docker-compose up
+        docker-compose up --build
 
-Front-End Development
+**Stop Containers:**
+    ```bash
+        docker-compose down
+
+**Front-End Development**
 Sailsmakr's front-end is built using a combination of VanillaJS, ES6, and JQuery to deliver a dynamic and responsive user experience. The UI is styled using TailwindCSS and Bootstrap MD from Creative TIM.
 
-Front-End Libraries and Frameworks:
-TailwindCSS: Utility-first CSS framework for creating responsive designs quickly.
-Bootstrap MD: Material Design components from Creative TIM for modern UI.
-VanillaJS (ES6): Core JavaScript standard for interactive components.
-JQuery: Simplifies DOM manipulation and event handling.
-APIs and Integrations
-Sailsmakr integrates several third-party APIs to enhance functionality:
+### Front-End Libraries and Frameworks:
+**TailwindCSS**: Utility-first CSS framework for creating responsive designs quickly.
+**Bootstrap MD**: Material Design components from Creative TIM for modern UI.
+**VanillaJS (ES6)**: Core JavaScript standard for interactive components.
+**JQuery**: Simplifies DOM manipulation and event handling.
+**APIs and Integrations**
 
-OpenCage: Geolocation API that converts geographic coordinates into human-readable addresses, useful for location-based features.
-FedEx & Freightos: APIs for providing real-time shipping rates, tracking information, and freight suggestions, ensuring that customers get the best shipping options.
-Testing and CI/CD
+**Sailsmakr integrates several third-party APIs to enhance functionality:**
+**OpenCage:** Geolocation API that converts geographic coordinates into human-readable addresses, useful for location-based features.
+**FedEx & Freightos:** APIs for providing real-time shipping rates, tracking information, and freight suggestions, ensuring that customers get the best shipping options.
+**Testing and CI/CD**
 Sailsmakr uses Jenkins for continuous integration and automated testing. This ensures that code pushed to the repository is automatically tested, and builds are generated for deployment.
 
-License
+### License
 Sailsmakr Softwares is the sole owner of all source code. No code may be redistributed or reproduced without explicit permission from Sailsmakr Software.
 
 For questions or issues, contact Bader Salissou Saâdou, Lead Software Architect.
