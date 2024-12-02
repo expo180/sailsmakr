@@ -1,0 +1,144 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% block title %}
+    <title>{{ _('Contacts : Sailsmakr') }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="d-flex">
+    <div class="my-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
+          <li class="breadcrumb-item">
+            <a class="link-body-emphasis" href="{{ url_for('user.user_home', company_id=company.id) }}">
+              <i class="bi bi-house-fill"></i>
+              <span class="visually-hidden">{{ _('Accueil') }}</span>
+            </a>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">
+            {{ _('Contacts') }}
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ _('Voir les contacts') }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <h2>
+    {{ _('Voir les contacts') }}
+  </h2>
+
+  {% if contacts %}
+    <table class="table align-items-center mb-0 border-bottom">
+      <thead class="bg-light">
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ _('ID') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{ _('Prénom') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{ _('Nom') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{ _('Email') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{ _('Téléphone') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{ _('Sexe') }}</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{{ _('Options') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %}
+          <tr>
+            <td>{{ contact.id }}</td>
+            <td>{{ contact.first_name }}</td>
+            <td>{{ contact.last_name }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.phone }}</td>
+            <td>{{ contact.message }}</td>
+            <td>{{ contact.gender }}</td>
+            <td>
+              <div class="dropdown">
+                <button class="btn shadow-lg" type="button" id="dropdownMenuButton{{ contact.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ _('...') }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ contact.id }}">
+                  <li>
+                    <button type="button" data-contact-id="{{ contact.id }}" class="dropdown-item edit-contact">
+                      <i class="bi bi-pencil"></i> {{ _('Modifier') }}
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-contact-id="{{ contact.id }}" class="dropdown-item delete-contact">
+                      <i class="bi bi-trash"></i> {{ _('Supprimer') }}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    {% include 'dashboard/customers/empty/no_contact.html' %}
+  {% endif %}
+
+  <!-- Edit Contact Modal -->
+  <div class="modal fade" id="EditContactModal" tabindex="-1" aria-labelledby="EditContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="EditContactModalLabel">{{ _('Modifier le contact') }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editContactForm" method="post">
+            <div class="mb-3">
+              <label for="EditContactFirstName" class="form-label">{{ _('Prénom') }}</label>
+              <input type="text" class="form-control" id="EditContactFirstName">
+              <p class="text-danger" id="EditContactFirstNameError" style="display: none;">{{ _('Veuillez donner un prénom') }}</p>
+            </div>
+            <div class="mb-3">
+              <label for="EditContactLastName" class="form-label">{{ _('Nom') }}</label>
+              <input type="text" class="form-control" id="EditContactLastName">
+              <p class="text-danger" id="EditContactLastNameError" style="display: none;">{{ _('Veuillez donner un nom') }}</p>
+            </div>
+            <div class="mb-3">
+              <label for="EditContactEmail" class="form-label">{{ _('Email') }}</label>
+              <input type="email" class="form-control" id="EditContactEmail">
+              <p class="text-danger" id="EditContactEmailError" style="display: none;">{{ _('Veuillez donner un email') }}</p>
+            </div>
+            <div class="mb-3">
+              <label for="EditContactPhone" class="form-label">{{ _('Téléphone') }}</label>
+              <input type="text" class="form-control" id="EditContactPhone">
+              <p class="text-danger" id="EditContactPhoneError" style="display: none;">{{ _('Veuillez donner un numéro de téléphone') }}</p>
+            </div>
+            <div class="mb-3">
+              <label for="EditContactMessage" class="form-label">{{ _('Message') }}</label>
+              <textarea class="form-control" id="EditContactMessage" rows="4"></textarea>
+              <p class="text-danger" id="EditContactMessageError" style="display: none;">{{ _('Veuillez écrire un message') }}</p>
+            </div>
+            <div class="mb-3">
+              <label for="EditContactGender" class="form-label">{{ _('Sexe') }}</label>
+              <select id="EditContactGender" class="form-select">
+                <option value="Male">{{ _('Homme') }}</option>
+                <option value="Female">{{ _('Femme') }}</option>
+                <option value="Other">{{ _('Autre') }}</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Annuler') }}</button>
+          <button type="button" class="btn btn-info" id="editContactButton">
+            <span id="EditContactText">{{ _('Mettre à jour') }}</span>
+            <span id="EditLoadingText" style="display: none;">{{ _('En cours...') }}</span>
+            <div class="spinner-border spinner-border-sm" style="display: none;"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="py-5"></div>
+<script type="module" src="{{ url_for('static', filename='js/async/api/@support_team/Contacts/EditContact.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/async/api/@support_team/Contacts/DeleteContact.js') }}"></script>
+{% endblock %}

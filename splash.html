@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sailsmakr: Open Creativity for all</title>
+    <style>
+        body {
+            background-color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            flex-direction: column;
+        }
+        img {
+            width: 150px;
+            height: auto;
+        }
+        .splash-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        /* Dot animation styles */
+        .dots {
+            display: inline-block;
+            font-size: 24px;
+        }
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            border-radius: 50%;
+            background-color: #000;
+            opacity: 0;
+            animation: dot-blink 1.5s infinite ease-in-out;
+        }
+        .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        /* Dot blink animation */
+        @keyframes dot-blink {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Version Text */
+        .version-text {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img src="./logo-desktop-splash.svg" alt="Logo">
+        <div class="splash-text">
+            <div class="dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="version-text" id="app-version"></div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => { 
+            const replaceText = (selector, text) => {
+                const element = document.getElementById(selector);
+                if (element) element.innerText = text;
+            };
+
+            replaceText('app-version', `Version: ${process.env.npm_package_version}`);
+        });
+    </script>
+</body>
+</html>

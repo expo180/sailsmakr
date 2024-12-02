@@ -1,0 +1,27 @@
+{% extends 'auth/layout.html' %}
+{% block title %}{{ _('Sailsmakr : Vérifiez votre boîte de réception') }}{% endblock %}
+{% block content %}
+<!-- Main container -->
+<div class="bg-white">
+    <!-- Flex container for centering items -->
+    <div class="flex h-screen flex-col items-center justify-center">
+      <!-- Container for login form -->
+      <div class="max-h-auto mx-auto max-w-xl">
+        <!-- Login title and description -->
+        <div class="mb-8 space-y-3">
+          <p class="text-xl">{{ _('Instructions envoyées à') }} {{ email }}</p>
+          <p class="text-gray-500">
+            {{ _('Un email contenant des Instructions a été envoyé') }} à {{ email }}.
+          </p>
+        </div>
+        <!-- Redem link -->
+        <div class="text-center">
+            {{ _('Vous n\'avez pas reçu le mail?') }}
+            <a class="text-blue-500" href="">
+                {{ _('Renvoyez le mail') }}
+            </a> 
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

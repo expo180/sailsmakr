@@ -1,0 +1,75 @@
+{
+  "name": "Sailsmakr",
+  "version": "1.0.0",
+  "description": "Open creativity for all",
+  "main": "main.js",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "concurrently": "^8.2.2",
+    "electron-updater": "^6.3.4",
+    "i18next": "^23.15.1",
+    "i18next-electron-fs-backend": "^3.0.2",
+    "lodash": "^4.17.21",
+    "open": "^8.4.2",
+    "xml2js": "^0.5.0",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/expo180/sailsmakr-integration.git"
+  },
+  "author": "Sailsmakr Softwares LLC",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/expo180/sailsmakr-integration/issues"
+  },
+  "homepage": "https://github.com/expo180/sailsmakr-integration#readme",
+  "build": {
+    "appId": "com.sailsmakr.app",
+    "productName": "Sailsmakr",
+    "copyright": "Copyright © 2024 Sailsmakr Softwares LLC",
+    "files": [
+      "./main.js",
+      "./build/icon.ico",
+      "./build/sails.exe",
+      "./splash.html",
+      "./logo-desktop-splash.svg"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Sailsmakr-${version}-win.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development",
+      "icon": "build/icons"
+    }
+  }
+}
