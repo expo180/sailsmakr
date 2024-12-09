@@ -83,16 +83,6 @@ Sailsmakr uses Neon DB for managing structured data in a relational format. Post
 | **Cloud Hosting**         | Sailsmakr runs on Render Cloud for scalable and seamless application hosting.                     | Seamless scaling, high availability   | Application hosting and scaling                  |
 | **Containerization with Docker** | Ensures consistent application performance across environments through containerization.        | Consistency, easier deployment, scaling | Backend, frontend, and database containerization |
 
-## Docker Commands  
-
-- **Start Containers:**  
-    ```bash
-    docker-compose up
-    docker-compose up --build
-
-**Stop Containers:**
-    ```bash
-    docker-compose down
 
 **Front-End Development**
 Sailsmakr's front-end is built using a combination of VanillaJS, ES6, and JQuery to deliver a dynamic and responsive user experience. The UI is styled using TailwindCSS and Bootstrap MD from Creative TIM.
