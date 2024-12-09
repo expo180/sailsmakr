@@ -11,3 +11,6 @@ static/data
 ./sailsmakr.todo
 ./questions.txt
 sails.todo
+./dist/*
+/linux-venv
+instance

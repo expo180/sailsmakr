@@ -1,18 +1,17 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const exec = require('child_process').exec;
-const http = require('http');
+const http = require('https');
 
 let mainWindow;
 let splash;
-let flaskProcess;
 
 /**
- * Checks if the server at 127.0.0.1:5000 is running.
+ * Checks if the server is running.
  */
 function isServerRunning() {
     return new Promise((resolve) => {
-        http.get('http://127.0.0.1:5000', (res) => {
+        http.get('https://sailsmakr-lc4l.onrender.com', (res) => {
             resolve(res.statusCode === 200);
         }).on('error', () => resolve(false));
     });
@@ -36,7 +35,7 @@ async function waitForServer() {
  */
 function createSplashWindow() {
     splash = new BrowserWindow({
-        width: 1200,
+        width: 800,
         height: 600,
         frame: false,
         transparent: true,
@@ -56,7 +55,7 @@ function createSplashWindow() {
  */
 async function checkAuthentication() {
     return new Promise((resolve, reject) => {
-        http.get('http://127.0.0.1:5000/auth/status', (res) => {
+        http.get('https://sailsmakr-lc4l.onrender.com/auth/status', (res) => {
             let data = '';
 
             res.on('data', chunk => {
@@ -82,8 +81,8 @@ async function createMainWindow() {
     try {
         const authStatus = await checkAuthentication();
         let loadURL = authStatus.authenticated
-            ? `http://127.0.0.1:5000/user_home/${authStatus.company_id}`
-            : 'http://127.0.0.1:5000/auth/login';
+            ? `https://sailsmakr-lc4l.onrender.com/user_home/${authStatus.company_id}`
+            : `https://sailsmakr-lc4l.onrender.com/auth/login`;
 
         mainWindow = new BrowserWindow({
             width: 800,
@@ -108,27 +107,9 @@ async function createMainWindow() {
     }
 }
 
-/**
- * Launches the Flask server as an external process.
- * Only starts the server if it's not already running.
- */
-async function startFlaskProcess() {
-    const serverRunning = await isServerRunning();
-    if (!serverRunning) {
-        flaskProcess = exec(path.join(__dirname, 'dist', 'sails.exe'), (error) => {
-            if (error) console.error(`Flask process error: ${error}`);
-        });
-        console.log("Starting Flask server...");
-    } else {
-        console.log("Flask server is already running.");
-    }
-}
+
 
 app.on('ready', async () => {
-    // Start Flask server only if it is not already running
-    await startFlaskProcess();
-
-    // Create splash window
     createSplashWindow();
 
     try {
@@ -152,7 +133,4 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-
-    // Kill Flask process when app quits
-    if (flaskProcess) flaskProcess.kill();
 });

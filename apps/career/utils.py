@@ -3,7 +3,6 @@ import qrcode
 from flask import render_template, send_file, url_for, current_app
 from io import BytesIO
 import openpyxl
-from docx import Document
 from weasyprint import HTML, CSS
 from datetime import datetime
 import os
@@ -84,39 +83,7 @@ def generate_excel(company, employee_data):
 
 
 def generate_docx(company, employee_data):
-    doc = Document()
-
-    doc.add_paragraph(f"Company: {company.name}")
-    doc.add_paragraph(f"Address: {company.address}")
-    doc.add_paragraph(f"Phone: {company.phone_number}")
-    doc.add_paragraph(f"Email: {company.email}")
-    doc.add_paragraph(f"Website: {company.website}")
-    
-    doc.add_paragraph("\nEmployee List\n")
-    
-    table = doc.add_table(rows=1, cols=9)
-    hdr_cells = table.rows[0].cells
-    headers = ["ID", "First Name", "Last Name", "Fonction", "Matricule", "Pipeline Name", "Address", "Phone Number", "Date of Birth"]
-    for i, header in enumerate(headers):
-        hdr_cells[i].text = header
-
-    for emp in employee_data:
-        row_cells = table.add_row().cells
-        row_cells[0].text = str(emp['id'])
-        row_cells[1].text = emp['first_name']
-        row_cells[2].text = emp['last_name']
-        row_cells[3].text = emp['fonction']
-        row_cells[4].text = emp['matricule']
-        row_cells[5].text = emp['pipeline_name']
-        row_cells[6].text = emp['address']
-        row_cells[7].text = emp['phone_number']
-        row_cells[8].text = emp['date_of_birth']
-
-    docx_file = BytesIO()
-    doc.save(docx_file)
-    docx_file.seek(0)
-    return send_file(docx_file, as_attachment=True, download_name="employee_list.docx", mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-
+    pass
 
 
 def generate_badge_qr_code(data):

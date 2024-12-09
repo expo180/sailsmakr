@@ -9,6 +9,7 @@ class Folder(db.Model):
     description = db.Column(db.Text)
     type = db.Column(db.String)
     status = db.Column(db.Boolean, default=True)
+    folder_number = db.Column(db.String(5), unique=True, nullable=False)
     client = db.Column(db.String)
     deadline = db.Column(db.DateTime, default=datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

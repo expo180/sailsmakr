@@ -14,12 +14,13 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-
 COPY requirements/common.txt ./requirements/common.txt
 RUN pip install --no-cache-dir -r requirements/common.txt
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5001
+
+COPY .env /user/apps/.env
 
 CMD ["python3", "run.py"]

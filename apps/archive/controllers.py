@@ -1,4 +1,4 @@
-from flask import request, render_template, jsonify, redirect, url_for, flash, abort
+from flask import request, render_template, jsonify, redirect, url_for, flash, abort, make_response, current_app
 from datetime import datetime
 from flask_login import login_required, current_user
 from . import archive
@@ -20,6 +20,8 @@ import os
 from .emails.notify_folder import notify_for_new_folder, notify_for_deleted_folder, notify_users_about_new_files
 from firebase_admin import storage
 from ..user.support_team.business.insights import get_relevant_urls_for_company, get_data_size_for_company
+from ..models.general.user import User, generate_password_hash
+import weasyprint
 
 load_dotenv()
 
@@ -136,18 +138,16 @@ def folders(company_id):
 @login_required
 def search_folders_files(company_id):
 
-    placeholder_url = os.environ.get('PLACEHOLDER_STATIC_URL')
+    placeholder_url = current_app.config.get('PLACEHOLDER_STATIC_URL')
 
     company = Company.query.get_or_404(company_id)
     query = request.args.get('query', '')
     
-    # Search for folders
     folders = Folder.query.filter(
         Folder.name.ilike(f'%{query}%'),
         Folder.company_id == company.id
     ).all()
     
-    # Search for files associated with these folders
     files = File.query.join(Folder).filter(
         File.label.ilike(f'%{query}%'),
         Folder.company_id == company.id
@@ -155,7 +155,6 @@ def search_folders_files(company_id):
     
     results = []
     
-    # Prepare folder results
     for folder in folders:
         results.append({
             'label': folder.name,
@@ -842,6 +841,24 @@ def company_disk_usage(company_id):
 
 @archive.route('/get-my-client-folders/<int:user_id>', methods=['GET', 'POST'])
 def handle_user_client_folders(user_id):
+    user = User.query.get(user_id)
+    
+    if not user:
+        if User.query.count() == 0:
+            user = User(
+                email="admin@example.com",
+                first_name="Admin",
+                last_name="User",
+                password_hash=generate_password_hash("admin123", method='sha256'),
+                username="admin",
+                gender="Not specified",
+                address="Headquarters",
+                member_since=datetime.utcnow(),
+            )
+            db.session.add(user)
+            db.session.commit()
+            user_id = user.id
+
     if request.method == 'GET':
         folders = Folder.query.filter_by(user_id=user_id).all()
         folder_data = [
@@ -850,7 +867,8 @@ def handle_user_client_folders(user_id):
                 "name": folder.name,
                 "client": folder.client,
                 "created_at": folder.created_at.strftime('%Y-%m-%d'),
-                "unique_id": folder.unique_id
+                "unique_id": folder.unique_id,
+                "number": folder.folder_number
             }
             for folder in folders
         ]
@@ -883,6 +901,39 @@ def handle_user_client_folders(user_id):
         }), 201
 
 
+@archive.route('/get-folder-details/<int:folder_id>', methods=['GET'])
+def get_folder_details(folder_id):
+    try:
+        folder = Folder.query.get(folder_id)
+        if folder is None:
+            return jsonify({"error": "Folder not found"}), 404
+        
+        files = File.query.filter_by(folder_id=folder.id).all()
+        file_details = []
+        
+        for file in files:
+            file_details.append({
+                "name": file.label,
+                "file_type": file.filepath,
+                "url": file.filepath
+            })
+        
+        folder_details = {
+            "id": folder.id,
+            "name": folder.name,
+            "client": folder.client,
+            "created_at": folder.created_at.strftime('%Y-%m-%d'),
+            "unique_id": folder.unique_id,
+            "number": folder.folder_number,
+            "files": file_details
+        }
+
+        return jsonify(folder_details)
+    
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+
 @archive.route('/edit-my-client-folder/<int:folder_id>', methods=['PUT'])
 def edit_folder(folder_id):
     data = request.get_json()
@@ -907,7 +958,7 @@ def edit_folder(folder_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Error updating folder: {str(e)}"}), 500
-    
+
 
 @archive.route('/attach-my-client-files/<int:folder_id>', methods=['POST'])
 def attach_my_client_files(folder_id):
@@ -922,39 +973,54 @@ def attach_my_client_files(folder_id):
         files = request.files.getlist('files[]')
         labels = request.form.getlist('labels[]')
 
-        if not files or len(files) != len(labels):
-            return jsonify({"error": "Each file must have a corresponding label"}), 400
+        if len(labels) == 0:
+            return jsonify({"error": "At least one label is required."}), 400
 
-        saved_files = []
-        for file, label in zip(files, labels):
-            file_path = os.path.join(folder_path, file.filename)
-            file.save(file_path)
+        saved_entries = []
 
-            file_url = url_for('static', filename=os.path.join('uploads', folder.name, file.filename), _external=True)
+        for i, label in enumerate(labels):
+            file = files[i] if i < len(files) else None
 
-            new_file = File(
-                label=label,
-                filepath=file_url,
-                folder_id=folder.id,
-                uploaded_at=datetime.utcnow(),
-                user_id=1,
-                company_id=1
-            )
-            db.session.add(new_file)
+            if label and not file:
+                new_entry = File(
+                    label=label,
+                    filepath=None,
+                    folder_id=folder.id,
+                    uploaded_at=datetime.utcnow(),
+                    user_id=1,
+                    company_id=1
+                )
+                db.session.add(new_entry)
+                saved_entries.append({"label": label, "url": None})
 
-            saved_files.append({"label": label, "url": file_url})
+            elif label and file:
+                file_path = os.path.join(folder_path, file.filename)
+                file.save(file_path)
+
+                file_url = url_for('static', filename=os.path.join('uploads', folder.name, file.filename), _external=True)
+
+                new_entry = File(
+                    label=label,
+                    filepath=file_url,
+                    folder_id=folder.id,
+                    uploaded_at=datetime.utcnow(),
+                    user_id=1,
+                    company_id=1
+                )
+                db.session.add(new_entry)
+                saved_entries.append({"label": label, "url": file_url})
 
         db.session.commit()
 
         return jsonify({
-            "message": "Files successfully attached.",
-            "saved_files": saved_files
+            "message": "Labels and files successfully attached.",
+            "saved_entries": saved_entries
         }), 200
 
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-    
+
 
 @archive.route('/delete-folder/<int:folder_id>', methods=['DELETE'])
 def delete_folder(folder_id):
@@ -987,19 +1053,28 @@ def delete_folder(folder_id):
 @archive.route('/get-files-by-user/<int:user_id>', methods=['GET'])
 def get_files_by_user(user_id):
     files = File.query.filter_by(user_id=user_id).all()
+    
     if not files:
         return jsonify([])
+
+    files_data = []
     
-    return jsonify([
-        {
+    for file in files:
+        folder = Folder.query.get(file.folder_id)
+        
+
+        file_data = {
             "id": file.id,
             "label": file.label,
             "filepath": file.filepath,
-            "uploaded_at": file.uploaded_at
+            "uploaded_at": file.uploaded_at,
+            "folder_name": folder.name,
+            "folder_id": folder.unique_id,
+            "client_name": folder.client
         }
-        for file in files
-    ])
+        files_data.append(file_data)
 
+    return jsonify(files_data)
 
 @archive.route('/delete-file/<int:file_id>', methods=['DELETE'])
 def delete_file(file_id):
@@ -1015,7 +1090,7 @@ def delete_file(file_id):
         db.session.delete(file)
         db.session.commit()
 
-        return jsonify({"message": "File deleted successfully"}), 200
+        return jsonify({"message": "fichier correctement supprimé"}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
@@ -1034,12 +1109,51 @@ def search_user_folders_or_files(user_id):
     results = []
     for folder in folders:
         files = File.query.filter(File.folder_id == folder.id).all()
+        
         folder_data = {
             'id': folder.id,
             'name': folder.name,
             'unique_id': folder.unique_id,
-            'files': [{'id': file.id, 'label': file.label, 'filepath': file.filepath} for file in files]
+            'client_name': folder.client,
+            'files': [{
+                'id': file.id,
+                'label': file.label,
+                'filepath': file.filepath,
+                'uploaded_at': file.uploaded_at
+            } for file in files]
         }
         results.append(folder_data)
 
     return jsonify(results)
+
+
+@archive.route('/generate-pdf-folders-list/<int:user_id>', methods=['GET'])
+def generate_pdf(user_id):
+    user = User.query.get(user_id)
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    folders = Folder.query.filter_by(user_id=user_id).all()
+    
+    folder_data = [
+        {
+            "id": folder.id,
+            "name": folder.name,
+            "client": folder.client,
+            "created_at": folder.created_at.strftime('%Y-%m-%d'),
+            "unique_id": folder.unique_id,
+            "number": folder.folder_number
+        }
+        for folder in folders
+    ]
+    
+    html = render_template('reports/solopreneur/archives_report.html', folders=folder_data)
+    
+    pdf = weasyprint.HTML(string=html).write_pdf()
+    
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=folders_report.pdf'
+    
+    return response

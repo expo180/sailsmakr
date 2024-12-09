@@ -1,27 +1,24 @@
-version: '3.8'
-
+version: "3.8"
 services:
-  flask:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+    build: .
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
-      FLASK_CONFIG: 'default'
-    networks:
-      - app-network
-
-  electron:
-    image: node:14
-    volumes:
-      - .:/user/apps
-    working_dir: /user/apps
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres:5432/mydatabase
     depends_on:
-      - flask
-    command: npm start
-    network_mode: host
-    
-networks:
-  app-network:
-    driver: bridge
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

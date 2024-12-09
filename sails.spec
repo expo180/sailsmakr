@@ -4,15 +4,16 @@ import os
 
 
 binaries = [
-    ('C:/Program Files/GTK3-Runtime/lib/libgobject-2.0-0.dll', '.'),
-    ('C:/Program Files/GTK3-Runtime/lib/libglib-2.0-0.dll', '.'),
-    ('C:/Program Files/GTK3-Runtime/lib/libgtk-3-0.dll', '.'),
+    ('C:/Program Files/GTK3-Runtime/bin/libgobject-2.0-0.dll', '.'),
+    ('C:/Program Files/GTK3-Runtime/bin/libglib-2.0-0.dll', '.'),
+    ('C:/Program Files/GTK3-Runtime/bin/libgtk-3-0.dll', '.'),
 ]
 
 datas = [
     ('.env', '.'),
     ('apps/templates', 'templates'),
     ('apps/static', 'static'),
+    ('apps/archive/static', 'archive/static')
 ]
 
 hidden_imports = collect_submodules('apps')
@@ -46,6 +47,6 @@ exe = EXE(
     debug=False,
     strip=False,
     upx=True,
-    console=False,  # Set this to False to hide the console window
+    console=True,
     icon='./build/icon.ico'
 )

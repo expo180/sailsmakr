@@ -15,8 +15,10 @@ from .utils import get_tasks_for_user
 from datetime import datetime
 from flask_oauthlib.client import OAuth
 from sqlalchemy import text
-import sys
-import os
+from flask_cors import CORS
+from sqlalchemy.event import listens_for
+
+
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -30,8 +32,9 @@ migrate = Migrate()
 babel = Babel()
 
 
-def create_app(development=True, template_folder='templates', static_folder='static'):
+def create_app(production=True, template_folder='templates', static_folder='static'):
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+    CORS(app, resources={r"/*": {"origins": ["http://localhost:1420", "file://"]}})
     app.config.from_object(config['development'])
     config['development'].init_app(app)
     app.config['JSON_AS_ASCII'] = False
@@ -43,6 +46,48 @@ def create_app(development=True, template_folder='templates', static_folder='sta
     login_manager.init_app(app)
     oauth.init_app(app)
     rapi.init_app(app)
+
+    from sqlalchemy import select, func
+    from sqlalchemy.event import listens_for
+    from .models.general.folder import Folder
+
+    def generate_unique_id():
+        """Generates a random 10-digit unique ID."""
+        import random
+        while True:
+            unique_id = random.randint(1000000000, 9999999999)
+            if not Folder.query.filter_by(unique_id=unique_id).first():
+                return unique_id
+
+    def generate_folder_number(connection):
+        """
+        Generates a sequential folder number formatted as '01', '02', etc.
+        Uses the connection object for safe querying.
+        """
+        result = connection.execute(
+            select(func.max(Folder.folder_number))
+        ).scalar()
+
+        if result is not None:
+            new_number = int(result) + 1
+        else:
+            new_number = 1
+
+        return f"{new_number:02d}"
+
+    @listens_for(Folder, 'before_insert')
+    def assign_folder_properties(mapper, connection, target):
+        """
+        Automatically assigns a unique ID and sequential folder number 
+        before inserting a folder into the database.
+        """
+        if not target.unique_id:
+            target.unique_id = generate_unique_id()
+
+        if not target.folder_number:
+            target.folder_number = generate_folder_number(connection)
+
+
 
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1')
