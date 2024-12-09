@@ -48,37 +48,25 @@ To run Sailsmakr locally, ensure you have the following tools installed:
 ### Installation
 
 1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/sailsmakr/sailsmakr.git
-   cd sailsmakr
+    ```bash
+    git clone https://github.com/sailsmakr/sailsmakr.git
+    cd sailsmakr
 
-2.**Set Up the Backend**:
-
-    Create a Python virtual environment and install dependencies
+2. **Set Up the Backend**:
+Create a Python virtual environment and install dependencies
     ```bash 
-        python3 -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
-3.**Set Up the Frontend**:
-
-Install npm dependencies:
+3. **Set Up the Frontend**:
+**Install npm dependencies**:
     ```bash
-        npm install
+    npm install
 
 
-4.**Run Docker Containers**:
-
-Ensure Docker is installed and running:
-    ```bash
-        docker-compose up --build
-
-Set Up Environment Variables:
-
+4. **Set Up Environment Variables**:
 Create a .env file and add the necessary environment variables, such as API keys for OpenCage, FedEx, Freightos, and database credentials.
-Code Infrastructure
-
-***Sailsmakr is designed using Infrastructure as Code (IaC) principles, which ensures that the infrastructure is automated, scalable, and consistent across environments. The deployment and provisioning of resources like databases, cloud instances, and storage are managed programmatically using tools like Terraform.**
 
 Python (Flask) serves as the core backend framework for handling API requests and business logic.
 The backend interacts with Neon DB (PostgreSQL) for managing relational data and Firestore for file storage.
@@ -98,13 +86,13 @@ Sailsmakr uses Neon DB for managing structured data in a relational format. Post
 ## Docker Commands  
 
 - **Start Containers:**  
-  ```bash
-        docker-compose up
-        docker-compose up --build
+    ```bash
+    docker-compose up
+    docker-compose up --build
 
 **Stop Containers:**
     ```bash
-        docker-compose down
+    docker-compose down
 
 **Front-End Development**
 Sailsmakr's front-end is built using a combination of VanillaJS, ES6, and JQuery to deliver a dynamic and responsive user experience. The UI is styled using TailwindCSS and Bootstrap MD from Creative TIM.
@@ -123,10 +111,10 @@ Sailsmakr's front-end is built using a combination of VanillaJS, ES6, and JQuery
 Sailsmakr uses Jenkins for continuous integration and automated testing. This ensures that code pushed to the repository is automatically tested, and builds are generated for deployment.
 
 ### License
-Sailsmakr Softwares is the sole owner of all source code. No code may be redistributed or reproduced without explicit permission from Sailsmakr Software.
+Sailsmakr Softwares is the sole owner of all source code. No code may be redistributed or reproduced without explicit permission from Sailsmakr Softwares.
 
 For questions or issues, contact Bader Salissou Saâdou, Lead Software Architect.
 
  
 
-This README.md provides comprehensive documentation for the Sailsmakr project, detailing its technology stack, setup process, and contribution guidelines.
+**This README.md provides comprehensive documentation for the Sailsmakr project, detailing its technology stack, setup process, and contribution guidelines.**
