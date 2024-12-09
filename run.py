@@ -16,10 +16,15 @@ else:
 load_dotenv(env_file_path)
 
 app = create_app(
-    development=os.getenv('FLASK_CONFIG') == 'development', 
+    production=True, 
     template_folder=template_folder, 
     static_folder=static_folder
 )
 
 if __name__ == '__main__':
-    app.run(debug=(os.getenv('FLASK_DEBUG', 'False') == 'True'), threaded=True)
+    app.run(
+        debug=(os.getenv('FLASK_DEBUG', 'False') == 'True'), 
+        threaded=True, 
+        host="0.0.0.0", 
+        port=5001
+    )
