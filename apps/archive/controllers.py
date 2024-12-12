@@ -914,8 +914,8 @@ def get_folder_details(folder_id):
         for file in files:
             file_details.append({
                 "name": file.label,
-                "file_type": file.filepath,
-                "url": file.filepath
+                "file_type": file.filepath.split('.')[-1] if file.filepath else "unknown",
+                "url": file.filepath or None 
             })
         
         folder_details = {
@@ -932,6 +932,7 @@ def get_folder_details(folder_id):
     
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 
 @archive.route('/edit-my-client-folder/<int:folder_id>', methods=['PUT'])

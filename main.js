@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const exec = require('child_process').exec;
 const http = require('https');
@@ -37,11 +37,11 @@ function createSplashWindow() {
     splash = new BrowserWindow({
         width: 800,
         height: 600,
-        frame: false,
         transparent: true,
         center: true,
-        alwaysOnTop: true,
+        autoHideMenuBar: true,
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             devTools: false
         }
     });
@@ -49,6 +49,16 @@ function createSplashWindow() {
     splash.loadFile(path.join(__dirname, './splash.html'));
     splash.on('closed', () => splash = null);
 }
+
+/**
+ * Listen close splash screen event
+ */
+ipcMain.on('close-splash', () => {
+    if (splash) {
+        splash.close();
+    }
+});
+
 
 /**
  * Fetches authentication status from the server.

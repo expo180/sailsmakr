@@ -40,7 +40,6 @@
     "files": [
       "./main.js",
       "./build/icon.ico",
-      "./build/sails.exe",
       "./splash.html",
       "./logo-desktop-splash.svg"
     ],
