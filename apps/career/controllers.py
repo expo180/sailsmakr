@@ -18,7 +18,7 @@ from ..decorators import school_hr_manager_required, customer_required
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from ..auth.utils import check_internet_connection, save_file_locally
-from .utils import generate_docx, generate_excel, generate_pdf, generate_qr_code, save_qr_code_to_static, generate_badge
+from .utils import generate_excel, generate_pdf, generate_qr_code, save_qr_code_to_static, generate_badge
 
 @career.route("/my-previous-applications/<int:company_id>", methods=['GET'])
 @login_required
@@ -505,8 +505,6 @@ def download_employee_list():
         return generate_pdf(company, employee_data, qr_code_url)
     elif format_type == 'excel':
         return generate_excel(company, employee_data)
-    elif format_type == 'docx':
-        return generate_docx(company, employee_data)
     else:
         return "Invalid format", 400
     

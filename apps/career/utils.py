@@ -82,9 +82,6 @@ def generate_excel(company, employee_data):
     return send_file(excel_file, as_attachment=True, download_name="employee_list.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 
-def generate_docx(company, employee_data):
-    pass
-
 
 def generate_badge_qr_code(data):
     """
