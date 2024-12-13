@@ -51,7 +51,9 @@ export default function validateForm() {
     LogoEmptyError.classList.add('hidden');
   }
 
-  if (!validateLogoFile()) valid = false;
+  if (!validateLogoFile()) {
+    valid = false;
+  }
 
   if (Location.value.trim() === '') {
     AddressEmptyError.classList.remove('hidden');
@@ -86,26 +88,47 @@ function validateCompanyTitle() {
   validateForm();
 }
 
+function showSuccessModal(email) {
+  const modal = document.getElementById('successModal');
+  const AdminEmail = modal.querySelector('#AdminEmail');
+
+  AdminEmail.textContent = email;
+
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+
 function validateLogoFile() {
   const file = LogoFile.files[0];
+  let isValid = true;
+
   if (!file) {
     LogoEmptyError.classList.remove('hidden');
-    return false;
+    isValid = false;
+  } else {
+    LogoEmptyError.classList.add('hidden');
   }
+
   const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/gif'];
-  if (!allowedTypes.includes(file.type)) {
+  if (file && !allowedTypes.includes(file.type)) {
     LogoTypeError.classList.remove('hidden');
-    return false;
+    isValid = false;
+  } else {
+    LogoTypeError.classList.add('hidden');
   }
-  if (file.size > 5 * 1024 * 1024) {
+
+  if (file && file.size > 5 * 1024 * 1024) {
     LogoSizeError.classList.remove('hidden');
-    return false;
+    isValid = false;
+  } else {
+    LogoSizeError.classList.add('hidden');
   }
-  LogoEmptyError.classList.add('hidden');
-  LogoTypeError.classList.add('hidden');
-  LogoSizeError.classList.add('hidden');
-  return true;
+
+  return isValid;
 }
+
+
 
 function checkPrivacyPolicy() {
   if (!privacyCheck.checked) {
@@ -184,10 +207,11 @@ function toggleUIState(isLoading) {
 
 if (LogoFile) {
   LogoFile.addEventListener('change', () => {
-    validateLogoFile();
-    enableSubmitButton();
+    const isLogoValid = validateLogoFile();
+    if (isLogoValid) validateForm();
   });
 }
+
 
 if (CompanyEmail) {
   CompanyEmail.addEventListener('input', () => {
@@ -321,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             console.log('Success:', result);
             const email = CompanyEmail.value.trim();
-            window.location.href = `${UtilApiURLs.CompanyCreationSuccessURL}?email=${encodeURIComponent(email)}`;
+            showSuccessModal(email);
           } catch (error) {
           console.error('Error:', error);
         } finally {
