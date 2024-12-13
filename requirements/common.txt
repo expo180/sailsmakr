@@ -59,4 +59,4 @@ openpyxl
 imapclient
 pyzmail36
 cairocffi
-Flask_cors
+flask-cors
