@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const exec = require('child_process').exec;
-const http = require('http');
+const http = require('https');
 
 let mainWindow;
 let splash;
@@ -11,7 +11,7 @@ let splash;
  */
 function isServerRunning() {
     return new Promise((resolve) => {
-        http.get('http://localhost:5001', (res) => {
+        http.get('https://sailsmakr-lc4l.onrender.com', (res) => {
             resolve(res.statusCode === 200);
         }).on('error', () => resolve(false));
     });
@@ -65,7 +65,7 @@ ipcMain.on('close-splash', () => {
  */
 async function checkAuthentication() {
     return new Promise((resolve, reject) => {
-        http.get('http://localhost:5001/auth/status', (res) => {
+        http.get('https://sailsmakr-lc4l.onrender.com/auth/status', (res) => {
             let data = '';
 
             res.on('data', chunk => {
@@ -91,8 +91,8 @@ async function createMainWindow() {
     try {
         const authStatus = await checkAuthentication();
         let loadURL = authStatus.authenticated
-            ? `http://localhost:5001/user_home/${authStatus.company_id}`
-            : `http://localhost:5001/auth/login`;
+            ? `https://sailsmakr-lc4l.onrender.com/user_home/${authStatus.company_id}`
+            : `https://sailsmakr-lc4l.onrender.com/auth/login`;
 
         mainWindow = new BrowserWindow({
             width: 800,
