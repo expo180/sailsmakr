@@ -14,3 +14,4 @@ sails.todo
 ./dist/*
 /linux-venv
 instance
+migrations

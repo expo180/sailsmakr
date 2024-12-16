@@ -5,11 +5,11 @@ class Folder(db.Model):
     __tablename__ = 'folders'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    unique_id = db.Column(db.BigInteger, unique=True, nullable=False, index=True)
+    unique_id = db.Column(db.BigInteger, unique=True, index=True)
     description = db.Column(db.Text)
     type = db.Column(db.String)
     status = db.Column(db.Boolean, default=True)
-    folder_number = db.Column(db.String(5), unique=True, nullable=False)
+    folder_number = db.Column(db.String(5), unique=True)
     client = db.Column(db.String)
     deadline = db.Column(db.DateTime, default=datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

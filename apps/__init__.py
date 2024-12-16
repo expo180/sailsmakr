@@ -180,20 +180,6 @@ def create_app(production=True, template_folder='templates', static_folder='stat
             tasks = []
         return dict(tasks=tasks)
 
-    def get_latest_article():
-        from .models.general.article import Article
-        article = Article.query.order_by(Article.id.desc()).first()
-        if article:
-            return {
-                'title': article.title,
-                'content': article.content[:10] + '...' if len(article.content) > 30 else article.content,
-                'img_url': article.article_img_url
-            }
-        return None
-
-    @app.context_processor
-    def inject_latest_article():
-        return {'latest_article': get_latest_article()}
 
     @app.template_filter('strftime')
     def _jinja2_filter_strftime(dt, fmt=None):
