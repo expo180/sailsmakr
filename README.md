@@ -35,8 +35,7 @@ Sailsmakr leverages a variety of modern technologies to deliver a seamless exper
 - **Render Cloud**: Cloud platform for hosting and scaling the application.
 - **OpenCage**: Geolocation API for converting coordinates into readable addresses.
 - **FedEx & Freightos APIs**: Used for providing real-time shipping and freight suggestions.
-
-
+- 
 ---
 
 ## Stack
@@ -87,8 +86,6 @@ To run Sailsmakr locally, ensure you have the following tools installed:
 4. **Set Up Environment Variables**:
     - Create a `.env` file and add the necessary environment variables, such as API keys for OpenCage, FedEx, Freightos, and database credentials.
 
----
-
 ## Code Infrastructure
 
 Sailsmakr's backend is powered by **Flask**, which handles API requests and core business logic. Infrastructure is managed programmatically with Terraform, ensuring consistency and scalability.
@@ -111,9 +108,30 @@ Firestore is used for handling unstructured data like files, media uploads, and 
 
 ---
 
+
 ## Cloud and Containerization
 
 Sailsmakr runs on **Render Cloud**, providing seamless hosting and scaling capabilities. All components are containerized using **Docker**, ensuring consistency across development and production environments.
+
+## Code Infrastructure
+
+Sailsmakr's backend is powered by **Flask**, which handles API requests and core business logic. Infrastructure is managed programmatically with Terraform, ensuring consistency and scalability.
+
+---
+
+## Database Management
+
+### Neon DB (PostgreSQL)
+
+Sailsmakr uses Neon DB for managing structured data in a relational format:
+- **ACID-compliant Database**: Ensures data reliability, integrity, and consistency.
+- **Scalability**: Handles large-scale transactional queries and ensures data integrity.
+
+### Firestore (NoSQL)
+
+Firestore is used for handling unstructured data like files, media uploads, and logs:
+- **Real-time Updates**: Facilitates instant data synchronization.
+- **Scalability**: Easily scales with application demands.
 
 ---
 
