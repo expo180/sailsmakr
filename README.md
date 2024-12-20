@@ -35,7 +35,6 @@ Sailsmakr leverages a variety of modern technologies to deliver a seamless exper
 - **Render Cloud**: Cloud platform for hosting and scaling the application.
 - **OpenCage**: Geolocation API for converting coordinates into readable addresses.
 - **FedEx & Freightos APIs**: Used for providing real-time shipping and freight suggestions.
-- 
 ---
 
 ## Stack
