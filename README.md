@@ -47,8 +47,7 @@ Sailsmakr leverages a variety of modern technologies to deliver a seamless exper
 | ![FedEx](https://img.icons8.com/color/48/000000/fedex.png) FedEx | ![Render](https://img.icons8.com/external-tal-revivo-color-tal-revivo/48/000000/external-render-fast-secure-and-comprehensive-web-application-hosting-logo-color-tal-revivo.png) Render Cloud | ![VanillaJS](https://img.icons8.com/color/48/000000/javascript.png) VanillaJS |
 | ![NeonDB](https://img.icons8.com/color/48/000000/database.png) NeonDB | ![jQuery](https://img.icons8.com/ios-filled/50/000000/jquery.png) jQuery | ![Jenkins](https://img.icons8.com/color/48/000000/jenkins.png) Jenkins |
 | ![Flask](https://img.icons8.com/color/48/000000/flask.png) Flask | ![Terraform](https://img.icons8.com/color/48/000000/terraform.png) Terraform | ![PostgreSQL](https://img.icons8.com/color/48/000000/postgreesql.png) PostgreSQL |
-| ![HTML5](https://img.icons8.com/color/48/000000/html-5.png) HTML5 | ![CSS3](https://img.icons8.com/color/48/000000/css3.png) CSS3 | ![Batch](https://img.icons8.com/ios-filled/48/000000/console.png) Batch |
-| ![Bash](https://img.icons8.com/color/48/000000/console.png) Bash | | |
+| ![HTML5](https://img.icons8.com/color/48/000000/html-5.png) HTML5 | ![CSS3](https://img.icons8.com/color/48/000000/css3.png) CSS3 | ![Bash](https://img.icons8.com/color/48/000000/bash.png) Bash |
 
 ---
 
