@@ -6,6 +6,7 @@
 
 ## Table of Contents
 - [Technologies](#technologies)
+- [Stack](#stack)
 - [Getting Started](#getting-started)
 - [Code Infrastructure](#code-infrastructure)
 - [Database Management](#database-management)
@@ -37,9 +38,16 @@ Sailsmakr leverages a variety of modern technologies to deliver a seamless exper
 
 
 ---
-### Technology Stack
+
+## Stack
 | ![Docker](https://img.icons8.com/color/48/000000/docker.png) Docker | ![Python](https://img.icons8.com/color/48/000000/python.png) Python | ![Firebase](https://img.icons8.com/color/48/000000/firebase.png) Firebase |
 |---------------------------------------------|---------------------------------------------|---------------------------------------------|
+| ![Node.js](https://img.icons8.com/color/48/000000/nodejs.png) Node.js | ![Bootstrap](https://img.icons8.com/color/48/000000/bootstrap.png) Bootstrap | ![TailwindCSS](https://img.icons8.com/color/48/000000/tailwind-css.png) TailwindCSS |
+| ![FedEx](https://img.icons8.com/color/48/000000/fedex.png) FedEx | ![Render](https://img.icons8.com/color/48/000000/cloud.png) Render Cloud | ![VanillaJS](https://img.icons8.com/color/48/000000/javascript.png) VanillaJS |
+| ![NeonDB](https://img.icons8.com/color/48/000000/database.png) NeonDB | ![jQuery](https://img.icons8.com/ios-filled/50/000000/jquery.png) jQuery | ![Jenkins](https://img.icons8.com/color/48/000000/jenkins.png) Jenkins |
+| ![Flask](https://img.icons8.com/color/48/000000/flask.png) Flask | ![Terraform](https://img.icons8.com/color/48/000000/terraform.png) Terraform | ![PostgreSQL](https://img.icons8.com/color/48/000000/postgreesql.png) PostgreSQL |
+
+---
 
 ## Getting Started
 
