@@ -16,7 +16,7 @@ services:
       - app_network
 
   nginx:
-    image: nginx:latest
+    image: expo180/nginx:latest
     container_name: nginx_server
     ports:
       - "80:80"
