@@ -21,10 +21,3 @@ app = create_app(
     static_folder=static_folder
 )
 
-if __name__ == '__main__':
-    app.run(
-        debug=(os.getenv('FLASK_DEBUG', 'False') == 'True'), 
-        threaded=True, 
-        host="0.0.0.0", 
-        port=5001
-    )
