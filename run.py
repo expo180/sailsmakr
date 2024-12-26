@@ -21,3 +21,11 @@ app = create_app(
     static_folder=static_folder
 )
 
+# Don't run the app with Flask's development server
+# if __name__ == '__main__':
+#     app.run(
+#         debug=(os.getenv('FLASK_DEBUG', 'False') == 'True'), 
+#         threaded=True, 
+#         host="0.0.0.0", 
+#         port=5001
+#     )
