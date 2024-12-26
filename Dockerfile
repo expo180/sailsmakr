@@ -17,10 +17,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements/common.txt ./requirements/common.txt
 RUN pip install --no-cache-dir -r requirements/common.txt
 
+RUN pip install gunicorn
+
 COPY . .
 
 EXPOSE 5001
 
 COPY .env /user/apps/.env
 
-CMD ["python3", "run.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5001", "run:app"]
