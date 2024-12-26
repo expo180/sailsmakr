@@ -15,3 +15,5 @@ sails.todo
 /linux-venv
 instance
 migrations
+./win-venv
+task.todo
