@@ -4,6 +4,7 @@ services:
   sails:
     build:
       context: .
+    image: expo180/sailsmakr:latest
     container_name: sailsmakr
     expose:
       - "5001"
@@ -11,8 +12,6 @@ services:
       - "5001:5001"
     volumes:
       - ./apps:/apps
-    depends_on:
-      - postgres
     networks:
       - app_network
 
@@ -28,23 +27,6 @@ services:
       - sails
     networks:
       - app_network
-
-  postgres:
-    image: postgres:15
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: bader
-      POSTGRES_PASSWORD: Theawesomebss7441$
-      POSTGRES_DB: sailsmakr
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app_network
-
-volumes:
-  postgres_data:
 
 networks:
   app_network:

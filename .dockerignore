@@ -12,3 +12,5 @@ build
 dist
 linux-venv
 migrations
+win-venv
+task.todo
