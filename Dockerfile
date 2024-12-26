@@ -23,6 +23,4 @@ COPY . .
 
 EXPOSE 5001
 
-COPY .env /user/apps/.env
-
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5001", "run:app"]
