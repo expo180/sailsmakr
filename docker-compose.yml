@@ -1,10 +1,10 @@
-version: "3.8"
+version: "1.0"
 
 services:
   sails:
     build:
       context: .
-    image: expo180/sailsmakr:latest
+    image: sailsmakr/sails:v1.0
     container_name: sailsmakr
     expose:
       - "5001"
@@ -12,19 +12,19 @@ services:
       - "5001:5001"
     volumes:
       - ./apps:/apps
+    depends_on:
+      - nginx
     networks:
       - app_network
 
   nginx:
-    image: expo180/nginx:latest
+    image: sailsmakr/nginx:v1.0
     container_name: nginx_server
     ports:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./apps/static:/apps/static
-    depends_on:
-      - sails
     networks:
       - app_network
 
