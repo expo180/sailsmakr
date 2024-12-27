@@ -5,7 +5,7 @@ class Folder(db.Model):
     __tablename__ = 'folders'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    unique_id = db.Column(db.BigInteger, unique=True, index=True)
+    unique_id = db.Column(db.BigInteger, unique=True, index=True, nullable=True)
     description = db.Column(db.Text)
     type = db.Column(db.String)
     status = db.Column(db.Boolean, default=True)
