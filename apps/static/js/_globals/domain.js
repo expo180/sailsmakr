@@ -1,3 +1,3 @@
-const domain = 'https://sailsmakr-lc4l.onrender.com'
+const domain = 'https://sailsmakr-d3bm.onrender.com'
 
 export default domain
