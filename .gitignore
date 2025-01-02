@@ -1,7 +1,7 @@
 *.pyc
 app.db
 ./tmp
-./build/*
+build
 .idea
 .env
 venv
@@ -11,7 +11,7 @@ static/data
 ./sailsmakr.todo
 ./questions.txt
 sails.todo
-./dist/*
+dist
 /linux-venv
 instance
 migrations
