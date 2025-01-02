@@ -860,7 +860,10 @@ def handle_user_client_folders(user_id):
             user_id = user.id
 
     if request.method == 'GET':
-        folders = Folder.query.filter_by(user_id=user_id).all()
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
+
+        folders = Folder.query.filter_by(user_id=user_id).paginate(page=page, per_page=limit, error_out=False)
         folder_data = [
             {
                 "id": folder.id,
@@ -868,37 +871,64 @@ def handle_user_client_folders(user_id):
                 "client": folder.client,
                 "created_at": folder.created_at.strftime('%Y-%m-%d'),
                 "unique_id": folder.unique_id,
-                "number": folder.folder_number
+                "number": folder.folder_number,
             }
-            for folder in folders
+            for folder in folders.items
         ]
-        return jsonify(folder_data)
+        
+        return jsonify({
+            "folders": folder_data,
+            "total": folders.total,
+            "pages": folders.pages,
+            "current_page": folders.page,
+        })
 
     elif request.method == 'POST':
         data = request.json
         name = data.get('name', '').strip()
         client = data.get('client', '').strip()
         company_id = data.get('company_id', '')
+        description = data.get('comments', '').strip()
+        archive_date = data.get('date')
 
         if not name:
-            return jsonify({"error": "Le nom du dossier un requis", "field": "folderName"}), 400
+            return jsonify({"error": "Le nom du dossier est requis", "field": "folderName"}), 400
 
         if not client:
             return jsonify({"error": "Nom du client est requis", "field": "folderClient"}), 400
 
-        new_folder = Folder(name=name, client=client, user_id=user_id, company_id=company_id)
-        db.session.add(new_folder)
-        db.session.commit()
+        try:
+            if archive_date:
+                archive_date = datetime.strptime(archive_date, '%Y-%m-%d')
+            else:
+                archive_date = datetime.utcnow()
 
-        return jsonify({
-            "message": "Folder created successfully",
-            "folder": {
-                "id": new_folder.id,
-                "name": new_folder.name,
-                "client": new_folder.client,
-                "created_at": new_folder.created_at.strftime('%Y-%m-%d')
-            }
-        }), 201
+            new_folder = Folder(
+                name=name,
+                client=client,
+                user_id=user_id,
+                company_id=company_id,
+                description=description,
+                created_at=archive_date
+            )
+
+            db.session.add(new_folder)
+            db.session.commit()
+
+            return jsonify({
+                "message": "Folder created successfully",
+                "folder": {
+                    "id": new_folder.id,
+                    "name": new_folder.name,
+                    "client": new_folder.client,
+                    "description": new_folder.description,
+                    "created_at": new_folder.created_at.strftime('%Y-%m-%d')
+                }
+            }), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 @archive.route('/get-folder-details/<int:folder_id>', methods=['GET'])
@@ -922,6 +952,7 @@ def get_folder_details(folder_id):
             "id": folder.id,
             "name": folder.name,
             "client": folder.client,
+            "description": folder.description,
             "created_at": folder.created_at.strftime('%Y-%m-%d'),
             "unique_id": folder.unique_id,
             "number": folder.folder_number,
@@ -1084,9 +1115,10 @@ def delete_file(file_id):
         return jsonify({"error": "File not found"}), 404
 
     try:
-        file_path = os.path.join(os.environ.get('ARCHIVE_STATIC_DIR'), file.filepath)
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if file.filepath:
+            file_path = os.path.join(os.environ.get('ARCHIVE_STATIC_DIR', ''), file.filepath)
+            if os.path.exists(file_path):
+                os.remove(file_path)
 
         db.session.delete(file)
         db.session.commit()
@@ -1095,7 +1127,7 @@ def delete_file(file_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-    
+
 
 @archive.route('/search-user-folders-or-files/<int:user_id>', methods=['GET'])
 def search_user_folders_or_files(user_id):
