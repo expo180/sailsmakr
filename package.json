@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Open creativity for all",
   "main": "main.js",
+  "author": {
+    "name": "Sailsmakr Softwares LLC",
+    "email": "support@sailsmakr.com"
+  },
+  "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.2",
     "concurrently": "^8.2.2",
@@ -27,8 +32,6 @@
     "type": "git",
     "url": "git+https://github.com/expo180/sailsmakr-integration.git"
   },
-  "author": "Sailsmakr Softwares LLC",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/expo180/sailsmakr-integration/issues"
   },
@@ -68,7 +71,7 @@
         "deb"
       ],
       "category": "Development",
-      "icon": "build/icons"
+      "icon": "build/icon.png"
     },
     "nsis": {
       "oneClick": false,
@@ -78,7 +81,7 @@
       "createStartMenuShortcut": true,
       "runAfterFinish": true,
       "perMachine": false,
-      "include": "installer.nsh"
+      "include": "./installer.nsh"
     }
   }
 }
