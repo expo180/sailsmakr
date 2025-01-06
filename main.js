@@ -1,14 +1,11 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
-const exec = require('child_process').exec;
 const http = require('https');
 
 let mainWindow;
 let splash;
 
-/**
- * Checks if the server is running.
- */
 function isServerRunning() {
     return new Promise((resolve) => {
         http.get('https://sailsmakr-2stb.onrender.com', (res) => {
@@ -17,9 +14,6 @@ function isServerRunning() {
     });
 }
 
-/**
- * Repeatedly checks server status every 500ms until it's running.
- */
 async function waitForServer() {
     let serverReady = false;
     while (!serverReady) {
@@ -30,9 +24,6 @@ async function waitForServer() {
     }
 }
 
-/**
- * Creates a splash window with specified properties.
- */
 function createSplashWindow() {
     splash = new BrowserWindow({
         width: 800,
@@ -50,19 +41,12 @@ function createSplashWindow() {
     splash.on('closed', () => splash = null);
 }
 
-/**
- * Listen close splash screen event
- */
 ipcMain.on('close-splash', () => {
     if (splash) {
         splash.close();
     }
 });
 
-
-/**
- * Fetches authentication status from the server.
- */
 async function checkAuthentication() {
     return new Promise((resolve, reject) => {
         http.get('https://sailsmakr-2stb.onrender.com/auth/status', (res) => {
@@ -84,9 +68,6 @@ async function checkAuthentication() {
     });
 }
 
-/**
- * Creates the main application window based on authentication status.
-*/
 async function createMainWindow() {
     try {
         const authStatus = await checkAuthentication();
@@ -117,13 +98,57 @@ async function createMainWindow() {
     }
 }
 
+function setupAutoUpdater() {
+    autoUpdater.autoDownload = false;
+    autoUpdater.autoInstallOnAppQuit = true;
 
+    autoUpdater.on('update-available', () => {
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update Available',
+            message: 'A new version of Sailsmakr is available. Do you want to download and install it now?',
+            buttons: ['Download and Install', 'Later'],
+            defaultId: 0,
+            cancelId: 1
+        }).then((response) => {
+            if (response.response === 0) {
+                autoUpdater.downloadUpdate();
+            } else {
+                console.log('Update postponed by the user.');
+            }
+        });
+    });
+
+    autoUpdater.on('update-downloaded', () => {
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update Ready',
+            message: 'The update has been downloaded. Restart the application to apply the update.',
+            buttons: ['Restart Now', 'Later'],
+            defaultId: 0,
+            cancelId: 1
+        }).then((response) => {
+            if (response.response === 0) {
+                autoUpdater.quitAndInstall();
+            } else {
+                console.log('Restart postponed by the user.');
+            }
+        });
+    });
+
+    autoUpdater.on('error', (error) => {
+        console.error('Error during update:', error);
+        dialog.showErrorBox('Update Error', 'An error occurred while checking for updates. Please try again later.');
+    });
+
+    autoUpdater.checkForUpdates();
+}
 
 app.on('ready', async () => {
     createSplashWindow();
+    setupAutoUpdater();
 
     try {
-        // Wait for server to be ready before opening the main window
         await waitForServer();
         await createMainWindow();
     } catch (err) {
@@ -139,7 +164,6 @@ app.on('activate', () => {
 });
 
 app.on('window-all-closed', () => {
-    // Quit the app if all windows are closed (except on macOS)
     if (process.platform !== 'darwin') {
         app.quit();
     }

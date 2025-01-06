@@ -11,7 +11,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "concurrently": "^8.2.2",
-    "electron-updater": "^6.3.4",
+    "electron-updater": "^6.3.9",
     "i18next": "^23.15.1",
     "i18next-electron-fs-backend": "^3.0.2",
     "lodash": "^4.17.21",
@@ -26,7 +26,8 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "publish": "electron-builder --publish always"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,13 @@
   "build": {
     "appId": "com.sailsmakr.app",
     "productName": "Sailsmakr",
+    "publish": {
+      "provider": "github",
+      "owner": "expo180",
+      "repo": "sailsmakr",
+      "releaseType": "release",
+      "channel": "latest"
+    },
     "copyright": "Copyright © 2024 Sailsmakr Softwares LLC",
     "files": [
       "./main.js",
