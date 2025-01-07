@@ -42,7 +42,7 @@
     "productName": "Sailsmakr",
     "publish": {
       "provider": "github",
-      "owner": "expo180",
+      "owner": "charlie180-code",
       "repo": "sailsmakr",
       "releaseType": "release",
       "channel": "latest"
