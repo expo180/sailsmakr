@@ -313,7 +313,7 @@
           <!-- Year Established & Annual Revenue -->
           <div class="col-span-6 md:col-span-3">
             <label for="YearEstablished" class="block text-sm font-medium text-gray-700">
-              {{ _('Année de création') }}
+              {{ _('Année de création') }} <span class="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -321,6 +321,7 @@
               name="year_established"
               class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
               placeholder="{{ _('2003') }}"
+              required
             />
           </div>
 
